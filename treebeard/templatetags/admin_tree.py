@@ -166,14 +166,13 @@ def items_for_result(cl, result, form):
             else:
                 attr = pk
             value = result.serializable_value(attr)
-            result_id = repr(force_str(value))[1:]
-            onclickstr = (
-                ' onclick="opener.dismissRelatedLookupPopup(window, %s);'
-                ' return false;"')
+            onclickstr = format_html("""
+            onclick="opener.dismissRelatedLookupPopup(window, '{}'); return false;"
+            """, mark_safe(value))
             yield mark_safe(
                 u('%s<%s%s>%s %s <a href="%s"%s>%s</a></%s>') % (
                     drag_handler, table_tag, row_class, spacer, collapse, url,
-                    (cl.is_popup and onclickstr % result_id or ''),
+                    (cl.is_popup and onclickstr or ''),
                     conditional_escape(result_repr), table_tag))
         else:
             # By default the fields come from ModelAdmin.list_editable, but if
